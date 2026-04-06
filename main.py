@@ -3,8 +3,7 @@ import json
 import time
 
 # Settings
-MODEL = "llama3.2"        # fixed: all caps to be consistent
-NUM_EXAMPLES = 100
+MODEL = "llama3.2"        
 OUTPUT_FILE = "output.jsonl"
 TOPIC = "School Students dataset"
 
@@ -20,6 +19,7 @@ Use exactly this format:
   "favorite_subject": "Mathematics"
 }}"""
 
+#Genrates dataset  
 def generate_one(example_number):
     response = ollama.chat(
         model=MODEL,
@@ -30,6 +30,7 @@ def generate_one(example_number):
     )
     return response["message"]["content"]
 
+# Refines the data for correct json format, in case the model adds extra text or markdown
 
 def parse_response(text):
     text = text.strip()
@@ -41,27 +42,41 @@ def parse_response(text):
 
 
 # Main loop
-dataset = []
+def generate_dataset(num_examples):
+    dataset = []
 
-print(f"Generating {NUM_EXAMPLES} student records...")
-print("-" * 50)
+    print(f"Generating {num_examples} student records...")
+    print("-" * 50)
 
-for i in range(1, NUM_EXAMPLES + 1):
-    try:
-        raw = generate_one(i)
-        item = parse_response(raw)
-        dataset.append(item)
-        print(f"✓ {i}/{NUM_EXAMPLES}: {item['name']}, Age: {item['age']}, Grade: {item['grade']}")
-    except json.JSONDecodeError:
-        print(f"✗ {i} — JSON parse failed, skipping")
-    except Exception as e:
-        print(f"✗ {i} — Error: {e}")
-    time.sleep(0.5)
+    for i in range(1, num_examples + 1):
+        try:
+            raw = generate_one(i)
+            item = parse_response(raw)
+            dataset.append(item)
 
-# Save to file
-with open(OUTPUT_FILE, "w") as f:
-    for item in dataset:
-        f.write(json.dumps(item) + "\n")
+            print(f"✓ {i}/{num_examples}: {item['name']}, Age: {item['age']}, Grade: {item['grade']}")
 
-print("-" * 50)
-print(f"Done! Saved {len(dataset)} records to {OUTPUT_FILE}")
+        except json.JSONDecodeError:
+            print(f"✗ {i} — JSON parse failed, skipping")
+        except Exception as e:
+            print(f"✗ {i} — Error: {e}")
+
+        time.sleep(0.5)
+
+    print("-" * 50)
+    print(f"Done! Generated {len(dataset)} records")
+
+    return dataset
+
+def save_to_file(dataset, filename=OUTPUT_FILE):
+    with open(filename, "w") as f:
+        for item in dataset:
+            f.write(json.dumps(item) + "\n")
+
+    print(f"Saved {len(dataset)} records to {filename}")
+    
+    if __name__ == "__main__":
+      data = generate_dataset(10)
+      save_to_file(data)
+      
+      
