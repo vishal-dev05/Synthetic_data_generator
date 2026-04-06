@@ -79,10 +79,10 @@ def save_to_file(dataset, filename=OUTPUT_FILE):
       
       #UI 
 import gradio as gr
-def ui_generate(num_examples):
-    data = generate_dataset(num_examples)
+def ui_generate(num):
+    data = generate_dataset(int(num))
     save_to_file(data)
-    return f"Generated {len(data)} records and saved to {OUTPUT_FILE}"
+    return data[:5]   # show only first 5 records
 
 interface = gr.Interface(
     fn=ui_generate,
