@@ -25,7 +25,8 @@ Pull model:
 ollama run llama3.2
 
 Install dependencies:
-pip install -r requirements.txt
+pip install uv
+uv sync 
 
 Run:
 uv run  main.py
