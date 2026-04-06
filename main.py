@@ -75,8 +75,22 @@ def save_to_file(dataset, filename=OUTPUT_FILE):
 
     print(f"Saved {len(dataset)} records to {filename}")
     
-if __name__ == "__main__":
-    data = generate_dataset(10)
+
+      
+      #UI 
+import gradio as gr
+def ui_generate(num_examples):
+    data = generate_dataset(num_examples)
     save_to_file(data)
-      
-      
+    return f"Generated {len(data)} records and saved to {OUTPUT_FILE}"
+
+interface = gr.Interface(
+    fn=ui_generate,
+    inputs=gr.Number(label="Number of Student Records"),
+    outputs="text",
+    title="Synthetic Student Dataset Generator",
+    description="Enter the number of student records you want to generate. The records will be saved to output.jsonl."
+)
+
+if __name__ == "__main__":
+    interface.launch()
