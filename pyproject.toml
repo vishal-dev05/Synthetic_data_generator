@@ -1,7 +1,7 @@
 [project]
 name = "synthetic-dataset-generator"
 version = "0.1.0"
-description = "Add your description here"
+description = "LLM-based synthetic student dataset generator using Ollama and Llama 3.2"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
