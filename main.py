@@ -75,8 +75,8 @@ def save_to_file(dataset, filename=OUTPUT_FILE):
 
     print(f"Saved {len(dataset)} records to {filename}")
     
-    if __name__ == "__main__":
-      data = generate_dataset(10)
-      save_to_file(data)
+if __name__ == "__main__":
+    data = generate_dataset(10)
+    save_to_file(data)
       
       
